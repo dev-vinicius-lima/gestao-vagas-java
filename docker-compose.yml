@@ -1,0 +1,22 @@
+# 1 - criando banco de dados postgres via docker compose...
+# 2 - PARA RODAR O DOCKER COMPOSE USE O COMANDO -> sudo docker compose up -d
+# 3 - PARA PARAR O DOCKER COMPOSE USE O COMANDO -> sudo docker compose down
+
+# docker-compose.yml versão 3.8
+version: '3.8'
+services:
+  # definindo o serviço postgres
+  postgres:
+    # nome do container
+    container_name: gestao_vagas_postgres
+    # nome da imagem
+    image: postgres
+    # numero da porta obs: verificar se a porta está disponível caso nao rodar comando abaixo:
+    # systemctl stop postgresql  || para parar o servidor local do postgresSQL
+    ports:
+      - 5432:5432
+    # definindo as variaveis de ambiente
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=gestao_vagas
