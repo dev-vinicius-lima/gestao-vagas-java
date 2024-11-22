@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
+import java.time.Duration;
+import java.time.Instant;
 
 @Service
 public class AuthCompanyUseCase {
@@ -27,8 +29,7 @@ public class AuthCompanyUseCase {
     // recebendo por parametro o username e a senha do DTO.
     public String execute(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
         // verificar se o usuário existe no banco
-        var company = this.companyRepository.findByUsername(authCompanyDTO.getUsername()).orElseThrow(
-                () -> new UsernameNotFoundException("Username/password incorrect"));
+        var company = this.companyRepository.findByUsername(authCompanyDTO.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Username/password incorrect"));
         // verificar a senha do usuário
         // metodo matches -> compara a senha nao criptografada com a senha criptografada.
         boolean passwordMatches = this.passwordEncoder.matches(authCompanyDTO.getPassword(), company.getPassword());
@@ -40,7 +41,10 @@ public class AuthCompanyUseCase {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         // gerar o token com o id da empresa como subject e o algoritmo de criptografia HMAC256
         // emissor do token -> javagas
-        var token = JWT.create().withIssuer("javagas").withSubject(company.getId().toString()).sign(algorithm);
+        var token = JWT.create().withIssuer("javagas")
+                .withExpiresAt(Instant.now().plus(Duration.ofHours(2)))
+                .withSubject(company.getId().toString())
+                .sign(algorithm);
         return token;
     }
 }
