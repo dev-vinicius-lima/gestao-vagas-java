@@ -29,7 +29,7 @@ public class AuthCompanyUseCase {
     // recebendo por parametro o username e a senha do DTO.
     public String execute(AuthCompanyDTO authCompanyDTO) throws AuthenticationException {
         // verificar se o usuário existe no banco
-        var company = this.companyRepository.findByUsername(authCompanyDTO.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Username/password incorrect"));
+        var company = this.companyRepository.findByUsername(authCompanyDTO.getUserName()).orElseThrow(() -> new UsernameNotFoundException("Username/password incorrect"));
         // verificar a senha do usuário
         // metodo matches -> compara a senha nao criptografada com a senha criptografada.
         boolean passwordMatches = this.passwordEncoder.matches(authCompanyDTO.getPassword(), company.getPassword());

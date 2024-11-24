@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/candidate")
-public class CanditadeController {
+public class CandidateController {
 
     @Autowired
     private CreateCandidateUseCase createCandidateUseCase;

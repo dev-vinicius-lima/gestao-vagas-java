@@ -29,7 +29,7 @@ public class AuthCandidateUseCase {
     private PasswordEncoder passwordEncoder;
 
     public AuthCandidateResponseDTO execute(AuthCandidateRequestDTO authCandidateRequestDTO) throws AuthenticationException {
-        var candidate = this.candidateRepository.findByUsername(authCandidateRequestDTO.username())
+        var candidate = this.candidateRepository.findByUsername(authCandidateRequestDTO.userName())
                 .orElseThrow(() -> new UsernameNotFoundException("Username/password incorrect"));
 
         var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
@@ -39,8 +39,9 @@ public class AuthCandidateUseCase {
         }
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        var expiresIn = Instant.now().plus(Duration.ofMinutes(10));
         var token = JWT.create()
-                .withExpiresAt(Instant.now().plus(Duration.ofHours(2)))
+                .withExpiresAt(expiresIn)
                 .withIssuer("javagas")
                 .withClaim("roles", List.of("candidate"))
                 .withSubject(candidate.getUuid().toString())
@@ -48,6 +49,7 @@ public class AuthCandidateUseCase {
 
         AuthCandidateResponseDTO authCandidateResponseDTO = AuthCandidateResponseDTO.builder()
                 .access_token(token)
+                .expires_in(expiresIn.toEpochMilli())
                 .build();
         return authCandidateResponseDTO;
 

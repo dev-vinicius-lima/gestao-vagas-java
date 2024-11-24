@@ -24,7 +24,7 @@ public class CandidateEntity {
     private String name;
     // @Pattern -> Define um padrão de validação
     @Pattern(regexp = "\\S+", message = "O campo userName Não deve ter espaço")
-    private String userName;
+    private String username;
     // @Email -> Define um padrão de validação
     @Email(message = "O campo Email deve conter um email válido")
     private String email;
