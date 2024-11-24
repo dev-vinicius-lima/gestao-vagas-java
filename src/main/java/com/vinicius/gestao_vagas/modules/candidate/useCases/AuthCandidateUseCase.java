@@ -43,7 +43,7 @@ public class AuthCandidateUseCase {
         var token = JWT.create()
                 .withExpiresAt(expiresIn)
                 .withIssuer("javagas")
-                .withClaim("roles", List.of("candidate"))
+                .withClaim("roles", List.of("CANDIDATE"))
                 .withSubject(candidate.getUuid().toString())
                 .sign(algorithm);
 
