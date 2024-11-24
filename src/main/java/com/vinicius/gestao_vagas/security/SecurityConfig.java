@@ -16,16 +16,21 @@ public class SecurityConfig {
     @Autowired
     private SecurityFilter securityFilter;
 
+    @Autowired
+    private SecurityCandidateFilter securityCandidateFilter;
+
     // @Bean -> Indica que esse método será sobrescrito pelo Spring
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/candidate").permitAll()
-                    .requestMatchers("/company").permitAll()
-                    .requestMatchers("/auth/company").permitAll()
-                    .requestMatchers("/auth/candidate").permitAll()
-                    .anyRequest().authenticated();
-        }).addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+                    auth.requestMatchers("/candidate").permitAll()
+                            .requestMatchers("/company").permitAll()
+                            .requestMatchers("/company/auth").permitAll()
+                            .requestMatchers("/candidate/auth").permitAll()
+                            .anyRequest().authenticated();
+                }).addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+
 
         return http.build();
     }
